@@ -13,23 +13,34 @@ export async function GET(request: Request) {
   let since: Date
   if (sinceParam) {
     since = new Date(`${sinceParam}T00:00:00.000Z`)
+    if (isNaN(since.getTime())) {
+      return NextResponse.json(
+        { error: 'Invalid since date (expected YYYY-MM-DD)' },
+        { status: 400 },
+      )
+    }
   } else {
     since = new Date()
-    since.setDate(since.getDate() - 7)
-    since.setHours(0, 0, 0, 0)
+    since.setUTCDate(since.getUTCDate() - 7)
+    since.setUTCHours(0, 0, 0, 0)
   }
 
-  const noShows = await prisma.appointment.findMany({
-    where: { status: 'no-show', date: { gte: since } },
-    include: { client: true },
-    orderBy: { date: 'desc' },
-  })
+  try {
+    const noShows = await prisma.appointment.findMany({
+      where: { status: 'no-show', date: { gte: since } },
+      include: { client: true },
+      orderBy: { date: 'desc' },
+    })
 
-  const result = noShows.map((a) => ({
-    clientName: a.client.name,
-    phone: a.client.phone,
-    missedDate: a.date.toISOString().split('T')[0],
-  }))
+    const result = noShows.map((a) => ({
+      clientName: a.client.name,
+      phone: a.client.phone,
+      missedDate: a.date.toISOString().split('T')[0],
+    }))
 
-  return NextResponse.json(result)
+    return NextResponse.json(result)
+  } catch (err) {
+    console.error('[no-shows]', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }

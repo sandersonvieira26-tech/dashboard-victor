@@ -55,4 +55,23 @@ describe('GET /api/n8n/no-shows', () => {
     const call = (mockPrisma.appointment.findMany as jest.Mock).mock.calls[0][0]
     expect(call.where.date.gte).toEqual(new Date('2026-05-01T00:00:00.000Z'))
   })
+
+  it('returns 400 when since param is not a valid date', async () => {
+    mockValidateApiKey.mockReturnValue(true)
+    const req = new Request('http://localhost/api/n8n/no-shows?since=not-a-date')
+    const res = await GET(req)
+    expect(res.status).toBe(400)
+    const data = await res.json()
+    expect(data.error).toContain('Invalid since date')
+  })
+
+  it('returns 500 when database query fails', async () => {
+    mockValidateApiKey.mockReturnValue(true)
+    ;(mockPrisma.appointment.findMany as jest.Mock).mockRejectedValue(new Error('DB error'))
+    const req = new Request('http://localhost/api/n8n/no-shows')
+    const res = await GET(req)
+    expect(res.status).toBe(500)
+    const data = await res.json()
+    expect(data.error).toBe('Internal server error')
+  })
 })
