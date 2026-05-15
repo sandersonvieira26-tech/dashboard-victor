@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(superpowers:brainstorming)",
+      "Bash(bash *)",
+      "Skill(code-review-skill)",
+      "Skill(superpowers:writing-plans)",
+      "Skill(superpowers:subagent-driven-development)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --src-dir=false --import-alias=\"@/*\" --no-eslint --yes)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --src-dir=false --import-alias=\"@/*\" --no-eslint --skip-git --skip-install)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --src-dir=false --import-alias=\"@/*\" --no-eslint --skip-git)",
+      "Bash(cd /tmp)",
+      "Bash(npx create-next-app@latest dashboard-victor --typescript --tailwind --app --src-dir=false --import-alias=\"@/*\" --no-eslint --skip-git)",
+      "Bash(cp -r /tmp/dashboard-victor/* \"C:\\\\Users\\\\sande\\\\OneDrive\\\\Desktop\\\\dashboard victor/\")",
+      "Bash(cp -r /tmp/dashboard-victor/.* \"C:\\\\Users\\\\sande\\\\OneDrive\\\\Desktop\\\\dashboard victor/\")",
+      "Bash(git init *)",
+      "Bash(git config *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ]
+  }
+}

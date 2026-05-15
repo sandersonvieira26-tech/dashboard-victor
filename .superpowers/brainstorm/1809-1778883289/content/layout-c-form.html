@@ -1,0 +1,122 @@
+<h2>Onde fica o formulário de cadastro?</h2>
+<p class="subtitle">No Layout C (abas), o formulário pode aparecer de 3 formas diferentes</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#1e293b;border-radius:8px;padding:10px;min-height:180px">
+        <!-- Tabs -->
+        <div style="display:flex;gap:4px;margin-bottom:8px">
+          <div style="background:#38bdf8;color:#0f172a;border-radius:4px;padding:4px 8px;font-size:9px;font-weight:bold">Hoje</div>
+          <div style="background:#0f172a;color:#94a3b8;border-radius:4px;padding:4px 8px;font-size:9px">Semana</div>
+          <div style="background:#0f172a;color:#94a3b8;border-radius:4px;padding:4px 8px;font-size:9px">Clientes</div>
+          <div style="background:#0f172a;color:#94a3b8;border-radius:4px;padding:4px 8px;font-size:9px">Faltas</div>
+          <div style="background:#4ade80;color:#0f172a;border-radius:4px;padding:4px 8px;font-size:9px;margin-left:auto;font-weight:bold">+ Novo</div>
+        </div>
+        <!-- List -->
+        <div style="background:#0f172a;border-radius:4px;padding:8px;margin-bottom:6px">
+          <div style="display:flex;justify-content:space-between;color:#e2e8f0;font-size:9px;padding:3px 0;border-bottom:1px solid #1e293b">
+            <span>09:00 Ana Lima</span><span style="color:#4ade80">✓ Compareceu</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;color:#e2e8f0;font-size:9px;padding:3px 0">
+            <span>10:00 Carlos Melo</span><span style="color:#f87171">✗ Faltou</span>
+          </div>
+        </div>
+        <!-- Modal overlay hint -->
+        <div style="background:#0f172a;border:1px solid #38bdf8;border-radius:6px;padding:8px;font-size:9px">
+          <div style="color:#38bdf8;margin-bottom:4px;font-weight:bold">📋 Novo Agendamento</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+            <div style="background:#1e293b;border-radius:3px;padding:3px 5px;color:#94a3b8">Nome...</div>
+            <div style="background:#1e293b;border-radius:3px;padding:3px 5px;color:#94a3b8">Telefone...</div>
+            <div style="background:#1e293b;border-radius:3px;padding:3px 5px;color:#94a3b8">Data...</div>
+            <div style="background:#1e293b;border-radius:3px;padding:3px 5px;color:#94a3b8">Hora...</div>
+          </div>
+          <div style="background:#38bdf8;color:#0f172a;border-radius:3px;padding:3px;text-align:center;margin-top:4px;font-weight:bold">Salvar</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Modal / Pop-up</h3>
+      <p>Botão "+ Novo" fixo na barra de abas. Clicou → abre um formulário sobreposto. Fecha ao salvar. Simples e não ocupa espaço da tela principal.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#1e293b;border-radius:8px;padding:10px;min-height:180px;display:flex;gap:6px">
+        <!-- Left: form -->
+        <div style="width:110px;background:#0f172a;border-radius:4px;padding:8px">
+          <div style="color:#38bdf8;font-size:9px;font-weight:bold;margin-bottom:6px">+ Novo Agendamento</div>
+          <div style="background:#1e293b;border-radius:3px;padding:3px 5px;color:#94a3b8;font-size:8px;margin-bottom:3px">Nome do cliente</div>
+          <div style="background:#1e293b;border-radius:3px;padding:3px 5px;color:#94a3b8;font-size:8px;margin-bottom:3px">Telefone</div>
+          <div style="background:#1e293b;border-radius:3px;padding:3px 5px;color:#94a3b8;font-size:8px;margin-bottom:3px">Data</div>
+          <div style="background:#1e293b;border-radius:3px;padding:3px 5px;color:#94a3b8;font-size:8px;margin-bottom:6px">Hora</div>
+          <div style="background:#38bdf8;color:#0f172a;border-radius:3px;padding:3px;text-align:center;font-size:8px;font-weight:bold">Salvar</div>
+        </div>
+        <!-- Right: tabs + list -->
+        <div style="flex:1">
+          <div style="display:flex;gap:3px;margin-bottom:6px">
+            <div style="background:#38bdf8;color:#0f172a;border-radius:4px;padding:3px 6px;font-size:8px;font-weight:bold">Hoje</div>
+            <div style="background:#0f172a;color:#94a3b8;border-radius:4px;padding:3px 6px;font-size:8px">Semana</div>
+            <div style="background:#0f172a;color:#94a3b8;border-radius:4px;padding:3px 6px;font-size:8px">Clientes</div>
+            <div style="background:#0f172a;color:#94a3b8;border-radius:4px;padding:3px 6px;font-size:8px">Faltas</div>
+          </div>
+          <div style="background:#0f172a;border-radius:4px;padding:6px">
+            <div style="color:#e2e8f0;font-size:8px;padding:3px 0;border-bottom:1px solid #1e293b;display:flex;justify-content:space-between">
+              <span>09:00 Ana Lima</span><span style="color:#4ade80">✓</span>
+            </div>
+            <div style="color:#e2e8f0;font-size:8px;padding:3px 0;display:flex;justify-content:space-between">
+              <span>10:00 Carlos</span><span style="color:#f87171">✗</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Painel Lateral Fixo</h3>
+      <p>Formulário sempre visível à esquerda, lista de agendamentos à direita. Cadastro rápido sem cliques extras. Melhor no desktop; no celular empilha verticalmente.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#1e293b;border-radius:8px;padding:10px;min-height:180px">
+        <!-- Tabs com aba de cadastro -->
+        <div style="display:flex;gap:4px;margin-bottom:8px">
+          <div style="background:#38bdf8;color:#0f172a;border-radius:4px;padding:4px 8px;font-size:9px;font-weight:bold">Hoje</div>
+          <div style="background:#0f172a;color:#94a3b8;border-radius:4px;padding:4px 8px;font-size:9px">Semana</div>
+          <div style="background:#0f172a;color:#94a3b8;border-radius:4px;padding:4px 8px;font-size:9px">Clientes</div>
+          <div style="background:#0f172a;color:#94a3b8;border-radius:4px;padding:4px 8px;font-size:9px">Faltas</div>
+          <div style="background:#0f172a;color:#4ade80;border-radius:4px;padding:4px 8px;font-size:9px;border:1px solid #4ade80">+ Cadastrar</div>
+        </div>
+        <!-- Lista hoje -->
+        <div style="background:#0f172a;border-radius:4px;padding:8px;margin-bottom:6px">
+          <div style="color:#94a3b8;font-size:8px;margin-bottom:4px">AGENDAMENTOS DO DIA</div>
+          <div style="display:flex;justify-content:space-between;color:#e2e8f0;font-size:9px;padding:3px 0;border-bottom:1px solid #1e293b">
+            <span>09:00 Ana Lima</span><span style="color:#4ade80">✓</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;color:#e2e8f0;font-size:9px;padding:3px 0">
+            <span>10:00 Carlos Melo</span><span style="color:#94a3b8">— marcar</span>
+          </div>
+        </div>
+        <!-- Quick add inline -->
+        <div style="background:#0f172a;border-radius:4px;padding:6px;border-left:2px solid #4ade80">
+          <div style="color:#4ade80;font-size:8px;margin-bottom:4px">CADASTRO RÁPIDO</div>
+          <div style="display:flex;gap:4px">
+            <div style="background:#1e293b;border-radius:3px;padding:3px 5px;color:#94a3b8;font-size:8px;flex:1">Nome</div>
+            <div style="background:#1e293b;border-radius:3px;padding:3px 5px;color:#94a3b8;font-size:8px;flex:1">Tel</div>
+            <div style="background:#4ade80;color:#0f172a;border-radius:3px;padding:3px 6px;font-size:8px;font-weight:bold">+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Cadastro Rápido Inline</h3>
+      <p>Mini-formulário colado na parte inferior da aba "Hoje", sempre visível. Cadastro sem mudar de tela. Para dados completos, expande com um clique.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:16px">Clique para selecionar e me diz no terminal</p>
