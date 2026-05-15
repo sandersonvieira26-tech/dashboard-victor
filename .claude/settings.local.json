@@ -16,7 +16,23 @@
       "Bash(git init *)",
       "Bash(git config *)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(npm run *)",
+      "Bash(npm list *)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:ui.shadcn.com)",
+      "WebSearch",
+      "Bash(Get-ChildItem -Force)",
+      "Bash(Select-Object -ExpandProperty Name)",
+      "Bash(npx shadcn@latest init -d)",
+      "Bash(npx shadcn@4.6.0 init -d)",
+      "Bash(npm install *)",
+      "Bash(npm config *)",
+      "Bash(npx shadcn@4.6.0 add -d button)",
+      "Bash(npx shadcn@4.6.0 add --help)",
+      "Bash(npx shadcn@4.6.0 add --yes button dialog input label card badge tabs)",
+      "Bash(NODE_TLS_REJECT_UNAUTHORIZED=0 npx shadcn@4.6.0 init -d)",
+      "Bash(NODE_TLS_REJECT_UNAUTHORIZED=0 npx shadcn@4.6.0 add --yes dialog input label card badge tabs)"
     ]
   }
 }
