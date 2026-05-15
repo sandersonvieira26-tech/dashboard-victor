@@ -54,4 +54,21 @@ describe('NewAppointmentModal', () => {
     await userEvent.click(backdrop)
     expect(onClose).toHaveBeenCalledTimes(1)
   })
+
+  it('disables form controls when isSubmitting is true', () => {
+    render(<NewAppointmentModal onClose={onClose} onSubmit={onSubmit} isSubmitting={true} />)
+    expect(screen.getByLabelText(/nome do cliente/i)).toBeDisabled()
+    expect(screen.getByLabelText(/telefone/i)).toBeDisabled()
+    expect(screen.getByLabelText(/data/i)).toBeDisabled()
+    expect(screen.getByRole('button', { name: /salvar/i })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /cancelar/i })).toBeDisabled()
+  })
+
+  it('does not close when clicking inside the modal dialog', async () => {
+    render(<NewAppointmentModal onClose={onClose} onSubmit={onSubmit} />)
+    // Click the modal box itself (not the backdrop)
+    const modalBox = screen.getByRole('heading', { name: /novo agendamento/i }).closest('div')!
+    await userEvent.click(modalBox)
+    expect(onClose).not.toHaveBeenCalled()
+  })
 })
