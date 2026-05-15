@@ -27,24 +27,31 @@ export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [updatingId, setUpdatingId] = useState<string | null>(null)
+  const [fetchError, setFetchError] = useState<string | null>(null)
 
   const fetchData = useCallback(async () => {
-    const [todayRes, weekRes, noShowRes, clientsRes] = await Promise.all([
-      fetch('/api/appointments?mode=day'),
-      fetch('/api/appointments?mode=week'),
-      fetch('/api/appointments?mode=no-shows'),
-      fetch('/api/clients'),
-    ])
-    const [today, week, noShows, clientsData] = await Promise.all([
-      todayRes.json(),
-      weekRes.json(),
-      noShowRes.json(),
-      clientsRes.json(),
-    ])
-    setTodayAppointments(Array.isArray(today) ? today : [])
-    setWeekAppointments(Array.isArray(week) ? week : [])
-    setNoShowAppointments(Array.isArray(noShows) ? noShows : [])
-    setClients(Array.isArray(clientsData) ? clientsData : [])
+    setFetchError(null)
+    try {
+      const [todayRes, weekRes, noShowRes, clientsRes] = await Promise.all([
+        fetch('/api/appointments?mode=day'),
+        fetch('/api/appointments?mode=week'),
+        fetch('/api/appointments?mode=no-shows'),
+        fetch('/api/clients'),
+      ])
+      const [today, week, noShows, clientsData] = await Promise.all([
+        todayRes.json(),
+        weekRes.json(),
+        noShowRes.json(),
+        clientsRes.json(),
+      ])
+      setTodayAppointments(Array.isArray(today) ? today : [])
+      setWeekAppointments(Array.isArray(week) ? week : [])
+      setNoShowAppointments(Array.isArray(noShows) ? noShows : [])
+      setClients(Array.isArray(clientsData) ? clientsData : [])
+    } catch (err) {
+      console.error('Dashboard fetch error:', err)
+      setFetchError('Falha ao carregar dados. Tente novamente.')
+    }
   }, [])
 
   useEffect(() => {
@@ -54,12 +61,14 @@ export default function Dashboard() {
   async function handleStatusChange(id: string, status: AppointmentStatus) {
     setUpdatingId(id)
     try {
-      await fetch(`/api/appointments/${id}`, {
+      const res = await fetch(`/api/appointments/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
       })
-      await fetchData()
+      if (res.ok) {
+        await fetchData()
+      }
     } finally {
       setUpdatingId(null)
     }
@@ -102,6 +111,12 @@ export default function Dashboard() {
         newClients={todayNewClients}
         onNewAppointment={() => setIsModalOpen(true)}
       />
+
+      {fetchError && (
+        <div className="mx-4 mt-3 rounded bg-red-900/40 px-4 py-2 text-xs text-red-400">
+          {fetchError}
+        </div>
+      )}
 
       {/* Tab navigation */}
       <nav className="flex border-b border-[#1e293b] bg-[#0f172a] px-4">
