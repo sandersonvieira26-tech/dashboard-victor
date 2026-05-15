@@ -61,24 +61,26 @@ describe('GET /api/n8n/tomorrow', () => {
     mockValidateApiKey.mockReturnValue(true)
     mockFindMany.mockResolvedValue([])
     const req = new Request('http://localhost/api/n8n/tomorrow')
-    const before = new Date()
     await GET(req)
-    const after = new Date()
 
     const call = mockFindMany.mock.calls[0][0]
     const gte: Date = call.where.date.gte
     const lt: Date = call.where.date.lt
 
-    // gte should be tomorrow midnight UTC, lt should be day-after-tomorrow midnight UTC
-    const tomorrowStart = new Date(before)
-    tomorrowStart.setUTCDate(tomorrowStart.getUTCDate() + 1)
-    tomorrowStart.setUTCHours(0, 0, 0, 0)
+    // lt should be exactly 24 hours after gte (one full day)
+    expect(lt.getTime() - gte.getTime()).toBe(24 * 60 * 60 * 1000)
 
-    const tomorrowEnd = new Date(tomorrowStart)
-    tomorrowEnd.setUTCDate(tomorrowEnd.getUTCDate() + 1)
+    // gte should be at UTC midnight (hours, minutes, seconds, ms all zero)
+    expect(gte.getUTCHours()).toBe(0)
+    expect(gte.getUTCMinutes()).toBe(0)
+    expect(gte.getUTCSeconds()).toBe(0)
+    expect(gte.getUTCMilliseconds()).toBe(0)
 
-    expect(gte.getTime()).toBeGreaterThanOrEqual(tomorrowStart.getTime())
-    expect(gte.getTime()).toBeLessThanOrEqual(tomorrowEnd.getTime())
-    expect(lt.getTime()).toBeGreaterThan(gte.getTime())
+    // gte should be tomorrow (getUTCDate of gte should equal today's UTC date + 1, modulo month boundaries)
+    const today = new Date()
+    const expectedTomorrow = new Date(today)
+    expectedTomorrow.setUTCDate(expectedTomorrow.getUTCDate() + 1)
+    expectedTomorrow.setUTCHours(0, 0, 0, 0)
+    expect(gte.getTime()).toBe(expectedTomorrow.getTime())
   })
 })
