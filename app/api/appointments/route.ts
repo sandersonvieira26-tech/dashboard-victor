@@ -8,6 +8,13 @@ export async function GET(request: Request) {
   const dateParam = searchParams.get('date')
 
   try {
+    if (dateParam) {
+      const parsed = new Date(dateParam)
+      if (isNaN(parsed.getTime())) {
+        return NextResponse.json({ error: 'Data inválida' }, { status: 400 })
+      }
+    }
+
     if (mode === 'no-shows') {
       const noShows = await prisma.appointment.findMany({
         where: { status: 'no-show' },

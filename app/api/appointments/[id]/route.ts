@@ -7,9 +7,10 @@ const VALID_STATUSES: AppointmentStatus[] = ['scheduled', 'attended', 'no-show']
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const body: UpdateStatusBody = await request.json()
     const { status } = body
 
@@ -19,7 +20,7 @@ export async function PATCH(
 
     const updated = await prisma.$transaction(async (tx) => {
       const appt = await tx.appointment.update({
-        where: { id: params.id },
+        where: { id },
         data: { status },
         include: { client: true },
       })

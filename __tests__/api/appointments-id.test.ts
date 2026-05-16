@@ -32,7 +32,7 @@ describe('PATCH /api/appointments/[id]', () => {
       method: 'PATCH',
       body: JSON.stringify({ status: 'invalido' }),
     })
-    const res = await PATCH(req, { params: { id: 'a1' } })
+    const res = await PATCH(req, { params: Promise.resolve({ id: 'a1' }) })
     expect(res.status).toBe(400)
   })
 
@@ -48,7 +48,7 @@ describe('PATCH /api/appointments/[id]', () => {
       method: 'PATCH',
       body: JSON.stringify({ status: 'attended' }),
     })
-    const res = await PATCH(req, { params: { id: 'a1' } })
+    const res = await PATCH(req, { params: Promise.resolve({ id: 'a1' }) })
     expect(res.status).toBe(200)
     expect(mockTxClientUpdate).toHaveBeenCalledWith({
       where: { id: 'c1' },
@@ -67,7 +67,7 @@ describe('PATCH /api/appointments/[id]', () => {
       method: 'PATCH',
       body: JSON.stringify({ status: 'no-show' }),
     })
-    await PATCH(req, { params: { id: 'a1' } })
+    await PATCH(req, { params: Promise.resolve({ id: 'a1' }) })
     expect(mockTxClientUpdate).not.toHaveBeenCalled()
   })
 })
