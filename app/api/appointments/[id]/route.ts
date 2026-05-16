@@ -15,18 +15,26 @@ export async function PATCH(
     return NextResponse.json({ error: 'Status inválido' }, { status: 400 })
   }
 
-  const updated = await prisma.appointment.update({
-    where: { id: params.id },
-    data: { status },
-    include: { client: true },
-  })
-
-  if (status === 'attended' && updated.client.isNew) {
-    await prisma.client.update({
-      where: { id: updated.clientId },
-      data: { isNew: false },
+  try {
+    const updated = await prisma.appointment.update({
+      where: { id: params.id },
+      data: { status },
+      include: { client: true },
     })
-  }
 
-  return NextResponse.json(updated)
+    if (status === 'attended' && updated.client.isNew) {
+      await prisma.client.update({
+        where: { id: updated.clientId },
+        data: { isNew: false },
+      })
+    }
+
+    return NextResponse.json(updated)
+  } catch (err: any) {
+    if (err?.code === 'P2025') {
+      return NextResponse.json({ error: 'Agendamento não encontrado' }, { status: 404 })
+    }
+    console.error('[appointments PATCH]', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }

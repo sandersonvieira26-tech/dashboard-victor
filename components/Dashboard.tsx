@@ -68,6 +68,9 @@ export default function Dashboard() {
       })
       if (res.ok) {
         await fetchData()
+      } else {
+        setFetchError('Erro ao atualizar status. Tente novamente.')
+        await fetchData()
       }
     } finally {
       setUpdatingId(null)
@@ -88,7 +91,6 @@ export default function Dashboard() {
       })
       if (!res.ok) throw new Error('Failed to create appointment')
       await fetchData()
-      setIsModalOpen(false)
     } finally {
       setIsSubmitting(false)
     }
