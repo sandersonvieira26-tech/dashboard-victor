@@ -40,7 +40,7 @@ export async function GET(request: Request) {
     const appointments = await prisma.appointment.findMany({
       where: { date: { gte: date, lt: nextDay } },
       include: { client: true },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { date: 'asc' },
     })
     return NextResponse.json(appointments)
   } catch (err) {
@@ -61,13 +61,17 @@ export async function POST(request: Request) {
   }
 
   const appointmentDate = new Date(date)
+  if (isNaN(appointmentDate.getTime())) {
+    return NextResponse.json({ error: 'Data inválida' }, { status: 400 })
+  }
   appointmentDate.setUTCHours(0, 0, 0, 0)
 
   try {
-    let client = await prisma.client.findFirst({ where: { phone } })
-    if (!client) {
-      client = await prisma.client.create({ data: { name, phone } })
-    }
+    const client = await prisma.client.upsert({
+      where: { phone },
+      update: {},
+      create: { name, phone },
+    })
 
     const appointment = await prisma.appointment.create({
       data: { clientId: client.id, date: appointmentDate, status: 'scheduled' },

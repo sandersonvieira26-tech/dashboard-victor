@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import type { UpdateStatusBody, AppointmentStatus } from '@/app/types'
 
@@ -30,8 +31,8 @@ export async function PATCH(
     }
 
     return NextResponse.json(updated)
-  } catch (err: any) {
-    if (err?.code === 'P2025') {
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2025') {
       return NextResponse.json({ error: 'Agendamento não encontrado' }, { status: 404 })
     }
     console.error('[appointments PATCH]', err)

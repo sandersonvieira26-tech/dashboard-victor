@@ -9,7 +9,7 @@ services:
       - sqlite_data:/app/data
     environment:
       - DATABASE_URL=file:/app/data/db.sqlite
-      - N8N_API_KEY=dev-api-key-change-me
+      - N8N_API_KEY=${N8N_API_KEY:?N8N_API_KEY must be set}
     restart: unless-stopped
 
 volumes:

@@ -11,8 +11,7 @@ jest.mock('@/lib/prisma', () => ({
       create: jest.fn(),
     },
     client: {
-      findFirst: jest.fn(),
-      create: jest.fn(),
+      upsert: jest.fn(),
     },
   },
 }))
@@ -31,7 +30,18 @@ describe('POST /api/appointments', () => {
     expect(res.status).toBe(400)
   })
 
-  it('cria cliente novo e agendamento quando telefone não existe', async () => {
+  it('retorna 400 quando data é inválida', async () => {
+    const req = new Request('http://localhost/api/appointments', {
+      method: 'POST',
+      body: JSON.stringify({ name: 'Ana Lima', phone: '11999990001', date: 'nao-e-data' }),
+    })
+    const res = await POST(req)
+    expect(res.status).toBe(400)
+    const data = await res.json()
+    expect(data.error).toContain('inválida')
+  })
+
+  it('cria agendamento usando upsert no cliente', async () => {
     const mockClient = {
       id: 'c1', name: 'Ana Lima', phone: '11999990001',
       isNew: true, createdAt: new Date().toISOString(),
@@ -40,8 +50,7 @@ describe('POST /api/appointments', () => {
       id: 'a1', date: new Date('2026-05-16'), status: 'scheduled',
       clientId: 'c1', client: mockClient, createdAt: new Date().toISOString(),
     }
-    ;(prisma.client.findFirst as jest.Mock).mockResolvedValue(null)
-    ;(prisma.client.create as jest.Mock).mockResolvedValue(mockClient)
+    ;(prisma.client.upsert as jest.Mock).mockResolvedValue(mockClient)
     ;(prisma.appointment.create as jest.Mock).mockResolvedValue(mockAppointment)
 
     const req = new Request('http://localhost/api/appointments', {
@@ -50,27 +59,9 @@ describe('POST /api/appointments', () => {
     })
     const res = await POST(req)
     expect(res.status).toBe(201)
-  })
-
-  it('reutiliza cliente existente pelo telefone', async () => {
-    const existingClient = {
-      id: 'c1', name: 'Ana Lima', phone: '11999990001',
-      isNew: false, createdAt: new Date().toISOString(),
-    }
-    const mockAppointment = {
-      id: 'a2', date: new Date('2026-05-20'), status: 'scheduled',
-      clientId: 'c1', client: existingClient, createdAt: new Date().toISOString(),
-    }
-    ;(prisma.client.findFirst as jest.Mock).mockResolvedValue(existingClient)
-    ;(prisma.appointment.create as jest.Mock).mockResolvedValue(mockAppointment)
-
-    const req = new Request('http://localhost/api/appointments', {
-      method: 'POST',
-      body: JSON.stringify({ name: 'Ana Lima', phone: '11999990001', date: '2026-05-20' }),
-    })
-    const res = await POST(req)
-    expect(res.status).toBe(201)
-    expect(prisma.client.create).not.toHaveBeenCalled()
+    expect(prisma.client.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { phone: '11999990001' } })
+    )
   })
 })
 

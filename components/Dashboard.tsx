@@ -28,6 +28,7 @@ export default function Dashboard() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [updatingId, setUpdatingId] = useState<string | null>(null)
   const [fetchError, setFetchError] = useState<string | null>(null)
+  const [statusError, setStatusError] = useState<string | null>(null)
 
   const fetchData = useCallback(async () => {
     setFetchError(null)
@@ -60,6 +61,7 @@ export default function Dashboard() {
 
   async function handleStatusChange(id: string, status: AppointmentStatus) {
     setUpdatingId(id)
+    setStatusError(null)
     try {
       const res = await fetch(`/api/appointments/${id}`, {
         method: 'PATCH',
@@ -69,7 +71,7 @@ export default function Dashboard() {
       if (res.ok) {
         await fetchData()
       } else {
-        setFetchError('Erro ao atualizar status. Tente novamente.')
+        setStatusError('Erro ao atualizar status. Tente novamente.')
         await fetchData()
       }
     } finally {
@@ -117,6 +119,11 @@ export default function Dashboard() {
       {fetchError && (
         <div className="mx-4 mt-3 rounded bg-red-900/40 px-4 py-2 text-xs text-red-400">
           {fetchError}
+        </div>
+      )}
+      {statusError && (
+        <div className="mx-4 mt-3 rounded bg-red-900/40 px-4 py-2 text-xs text-red-400">
+          {statusError}
         </div>
       )}
 
