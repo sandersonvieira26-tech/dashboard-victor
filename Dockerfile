@@ -11,7 +11,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV DATABASE_URL="file:/app/data/db.sqlite"
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npx prisma generate
+RUN node node_modules/prisma/build/index.js generate
 RUN npm run build
 
 # Stage 3: Runner
