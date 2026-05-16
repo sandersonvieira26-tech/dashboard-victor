@@ -9,26 +9,30 @@ export async function PATCH(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const body: UpdateStatusBody = await request.json()
-  const { status } = body
-
-  if (!VALID_STATUSES.includes(status)) {
-    return NextResponse.json({ error: 'Status inválido' }, { status: 400 })
-  }
-
   try {
-    const updated = await prisma.appointment.update({
-      where: { id: params.id },
-      data: { status },
-      include: { client: true },
-    })
+    const body: UpdateStatusBody = await request.json()
+    const { status } = body
 
-    if (status === 'attended' && updated.client.isNew) {
-      await prisma.client.update({
-        where: { id: updated.clientId },
-        data: { isNew: false },
-      })
+    if (!VALID_STATUSES.includes(status)) {
+      return NextResponse.json({ error: 'Status inválido' }, { status: 400 })
     }
+
+    const updated = await prisma.$transaction(async (tx) => {
+      const appt = await tx.appointment.update({
+        where: { id: params.id },
+        data: { status },
+        include: { client: true },
+      })
+
+      if (status === 'attended' && appt.client.isNew) {
+        await tx.client.update({
+          where: { id: appt.clientId },
+          data: { isNew: false },
+        })
+      }
+
+      return appt
+    })
 
     return NextResponse.json(updated)
   } catch (err) {

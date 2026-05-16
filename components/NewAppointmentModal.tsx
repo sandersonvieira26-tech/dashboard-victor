@@ -17,16 +17,20 @@ export default function NewAppointmentModal({
   const [phone, setPhone] = useState('')
   const [date, setDate] = useState('')
   const [loading, setLoading] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const disabled = isSubmitting || loading
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!name.trim() || !phone.trim() || !date) return
+    setSubmitError(null)
     setLoading(true)
     try {
       await onSubmit({ name: name.trim(), phone: phone.trim(), date })
       onClose()
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Erro ao salvar agendamento. Tente novamente.')
     } finally {
       setLoading(false)
     }
@@ -86,6 +90,11 @@ export default function NewAppointmentModal({
               className="rounded bg-[#1e293b] px-3 py-2 text-sm text-slate-100 outline-none focus:ring-1 focus:ring-sky-400 disabled:opacity-50"
             />
           </div>
+          {submitError && (
+            <div className="rounded bg-red-900/40 px-3 py-2 text-xs text-red-400">
+              {submitError}
+            </div>
+          )}
           <div className="flex gap-2 pt-2">
             <button
               type="submit"

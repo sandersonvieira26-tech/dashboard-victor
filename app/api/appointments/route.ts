@@ -13,6 +13,7 @@ export async function GET(request: Request) {
         where: { status: 'no-show' },
         include: { client: true },
         orderBy: { date: 'desc' },
+        take: 200,
       })
       return NextResponse.json(noShows)
     }
@@ -50,23 +51,23 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const body: CreateAppointmentBody = await request.json()
-  const { name, phone, date } = body
-
-  if (!name || !phone || !date) {
-    return NextResponse.json(
-      { error: 'name, phone e date são obrigatórios' },
-      { status: 400 }
-    )
-  }
-
-  const appointmentDate = new Date(date)
-  if (isNaN(appointmentDate.getTime())) {
-    return NextResponse.json({ error: 'Data inválida' }, { status: 400 })
-  }
-  appointmentDate.setUTCHours(0, 0, 0, 0)
-
   try {
+    const body: CreateAppointmentBody = await request.json()
+    const { name, phone, date } = body
+
+    if (!name || !phone || !date) {
+      return NextResponse.json(
+        { error: 'name, phone e date são obrigatórios' },
+        { status: 400 }
+      )
+    }
+
+    const appointmentDate = new Date(date)
+    if (isNaN(appointmentDate.getTime())) {
+      return NextResponse.json({ error: 'Data inválida' }, { status: 400 })
+    }
+    appointmentDate.setUTCHours(0, 0, 0, 0)
+
     const client = await prisma.client.upsert({
       where: { phone },
       update: {},
